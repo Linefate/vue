@@ -30,7 +30,8 @@ Vue.prototype.$mount = function (
   }
 
   const options = this.$options
-  // resolve template/el and convert to render function
+    // resolve template/el and convert to render function
+      // 处理用户自定义选项，可知执行顺序是 render > template > el
   if (!options.render) {
     let template = options.template
     if (template) {
@@ -87,10 +88,17 @@ Vue.prototype.$mount = function (
  * of SVG elements in IE as well.
  */
 function getOuterHTML (el: Element): string {
+  /**
+   * dom接口outerHTML:获取描述元素（包括其后代的）的序列化HTML片段 
+   */
   if (el.outerHTML) {
     return el.outerHTML
   } else {
     const container = document.createElement('div')
+    /**
+     *cloneNode： 返回调用该方法的节点的一个副本
+     * 参数deep（boolean）:采用深度克隆。如果为true:则该节点的后代也会被克隆，如果为false,则只克隆该节点本身
+     * */
     container.appendChild(el.cloneNode(true))
     return container.innerHTML
   }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <span>{{counter}}</span>
+    <p v-html="htmlNode"></p>
+    <p v-text="counter"></p>
+  </div>
+  <script src="../dist/vue.js"></script>
+  <script>
+     var app = new Vue({
+      el: '#app',
+      data: {
+        counter: 888,
+        htmlNode: "<span style='color: blueviolet;'>这是在vue中的模板</span>",
+        objs:  {
+          obj2: 22
+        }
+      }
+    })
+  </script>
+</body>
+</html>
