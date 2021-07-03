@@ -37,7 +37,7 @@ export function toggleObserving (value: boolean) {
 export class Observer {
   value: any;
   dep: Dep;
-  vmCount: number; // number of vms that have this object as root $data
+  vmCount: number; // number of vms that have this object as root $data //以该对象为根的虚拟机数量 $data 
 
   constructor (value: any) {
     this.value = value
@@ -50,6 +50,7 @@ export class Observer {
       } else {
         copyAugment(value, arrayMethods, arrayKeys)
       }
+      /**给数组的每一项都创建一个观察者 */
       this.observeArray(value)
     } else {
       this.walk(value)
@@ -60,10 +61,15 @@ export class Observer {
    * Walk through all properties and convert them into
    * getter/setters. This method should only be called when
    * value type is Object.
+   * 
+   * *遍历所有属性并将它们转换为
+   * getter/setters。该方法只应在以下情况下调用
+   *  值类型是对象ss
    */
   walk (obj: Object) {
     const keys = Object.keys(obj)
     for (let i = 0; i < keys.length; i++) {
+      // 在对象上定义反应性属性
       defineReactive(obj, keys[i])
     }
   }
@@ -112,6 +118,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     return
   }
   let ob: Observer | void
+  /** *检查对象是否具有该属性__ob__。 */
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
   } else if (
@@ -131,6 +138,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
 
 /**
  * Define a reactive property on an Object.
+ * 在对象上定义响应式属性
  */
 export function defineReactive (
   obj: Object,
@@ -140,7 +148,12 @@ export function defineReactive (
   shallow?: boolean
 ) {
   const dep = new Dep()
-
+  /**
+   *  Object.getOwnPropertyDescriptor(obj, key)
+   *  返回obj对象上自由属性key对应的属性描述符
+   *  configurable： 当且仅当指定对象的【属性描述】可以被改变或者属性可被删除时，为true
+   *  writable： 当且仅当属性的值可以被改变时为true。(仅针对数据属性描述有效)
+   */
   const property = Object.getOwnPropertyDescriptor(obj, key)
   if (property && property.configurable === false) {
     return

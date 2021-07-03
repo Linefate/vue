@@ -51,11 +51,14 @@ export function initState (vm: Component) {
   if (opts.props) initProps(vm, opts.props)
   if (opts.methods) initMethods(vm, opts.methods)
   if (opts.data) {
+    // 初始化data
     initData(vm)
   } else {
     observe(vm._data = {}, true /* asRootData */)
   }
+  // 计算属性computed
   if (opts.computed) initComputed(vm, opts.computed)
+  // watch 
   if (opts.watch && opts.watch !== nativeWatch) {
     initWatch(vm, opts.watch)
   }
@@ -144,10 +147,11 @@ function initData (vm: Component) {
         vm
       )
     } else if (!isReserved(key)) {
+      /** *检查字符串是否以 $ 或 _ 开头 */
       proxy(vm, `_data`, key)
     }
   }
-  // observe data
+  // observe data 为data创建观察者实例
   observe(data, true /* asRootData */)
 }
 
