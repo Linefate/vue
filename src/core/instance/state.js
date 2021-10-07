@@ -177,6 +177,11 @@ function initComputed (vm: Component, computed: Object) {
   const isSSR = isServerRendering()
 
   for (const key in computed) {
+    /**获取计算属性的定义 userDef 和 getter 求值函数
+     * 定义一个计算属性有两种写法，一种是直接跟一个函数，
+     * 另一种是添加 set 和 get 方法的对象形式，
+     * 所以这里首先获取计算属性的定义 userDef，再根据 userDef 的类型获取相应的 getter 求值函数。
+     */
     const userDef = computed[key]
     const getter = typeof userDef === 'function' ? userDef : userDef.get
     if (process.env.NODE_ENV !== 'production' && getter == null) {
@@ -216,6 +221,7 @@ export function defineComputed (
   key: string,
   userDef: Object | Function
 ) {
+  /**不是ssr */
   const shouldCache = !isServerRendering()
   if (typeof userDef === 'function') {
     sharedPropertyDefinition.get = shouldCache
@@ -239,6 +245,7 @@ export function defineComputed (
       )
     }
   }
+  // 在这段代码的最后调用了原生 Object.defineProperty 方法，其中传入的第三个参数是属性描述符sharedPropertyDefinition，初始化为：
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 
@@ -246,7 +253,9 @@ function createComputedGetter (key) {
   return function computedGetter () {
     const watcher = this._computedWatchers && this._computedWatchers[key]
     if (watcher) {
+      /**如果有变化，watchet.dirty 属性会是true */
       if (watcher.dirty) {
+        /**获取最新值 */
         watcher.evaluate()
       }
       if (Dep.target) {
